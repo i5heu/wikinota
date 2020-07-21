@@ -80,6 +80,7 @@ async fn save_file(actix_data: web::Data<AppState>, bytes: Bytes) -> HttpRespons
 
     let test_item: &PersistentItem = &PersistentItem {
         hash: hex.to_string(),
+        key: "testing:test".to_string(),
         tree_hash: hex.to_string(),
         parent_hash: hex.to_string(),
         hash_if_deleted: hex.to_string(),
@@ -168,7 +169,7 @@ async fn main() -> std::io::Result<()> {
     std::env::set_var("RUST_LOG", "actix_server=info,actix_web=info");
     std::fs::create_dir_all("./tmp").unwrap();
 
-    let ip = "0.0.0.0:3023";
+    let ip = "0.0.0.0:3026";
 
     let db = match gerasdb::init() {
         Ok(e) => e,
