@@ -76,9 +76,6 @@ async fn save_file(actix_data: web::Data<AppState>, bytes: Bytes) -> HttpRespons
 
     let hex = hasher.result_str();
 
-    println!("2 : {}", name);
-    println!("2,2 : {}", &hex);
-
     let hash = "";
 
     let test_item: &PersistentItem = &PersistentItem {
