@@ -1,9 +1,10 @@
 #[macro_use]
 extern crate serde_derive;
-extern crate gerasdb;
 extern crate crypto;
+extern crate gerasdb;
 extern crate rustc_serialize;
 use actix_web::{middleware, web, App, HttpServer};
+use openssl::ssl::{SslAcceptor, SslFiletype, SslMethod};
 use r2d2::Pool;
 use r2d2_sqlite::SqliteConnectionManager;
 use std::process;
@@ -24,12 +25,12 @@ pub struct QueryParam {
     id: String,
 }
 
+// openssl req -x509 -newkey rsa:4096 -nodes -keyout key.pem -out cert.pem -days 365 -subj '/CN=localhost'
+
 #[actix_rt::main]
 async fn main() -> std::io::Result<()> {
     std::env::set_var("RUST_LOG", "actix_server=info,actix_web=info");
     std::fs::create_dir_all("./tmp").unwrap();
-
-    let ip = "0.0.0.0:3026";
 
     let db = match gerasdb::init() {
         Ok(e) => e,
@@ -46,6 +47,16 @@ async fn main() -> std::io::Result<()> {
         pool: db_arc,
     });
 
+    let mut builder = SslAcceptor::mozilla_intermediate(SslMethod::tls()).unwrap();
+    builder
+        .set_private_key_file("key.pem", SslFiletype::PEM)
+        .unwrap();
+    builder.set_certificate_chain_file("cert.pem").unwrap();
+
+    HttpServer::new(|| App::new().route("*", web::get().to(reqHandlers::redirect_to_https)))
+        .bind("0.0.0.0:80")?
+        .run();
+
     HttpServer::new(move || {
         App::new()
             .app_data(app_data.clone())
@@ -57,7 +68,7 @@ async fn main() -> std::io::Result<()> {
             )
             .service(web::resource("/get").route(web::get().to(reqHandlers::getItem)))
     })
-    .bind(ip)?
+    .bind_openssl("0.0.0.0:443", builder)?
     .run()
     .await
 }
@@ -66,6 +77,5 @@ async fn main() -> std::io::Result<()> {
 fn it_works() -> Result<(), gerasdb::dbError> {
     let result = gerasdb::init()?;
     assert_eq!(result.db_name, "HelloDBName");
-    
     Ok(())
 }
