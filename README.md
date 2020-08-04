@@ -1,2 +1,4 @@
 # wikinota
-This is WikiNota - pls. consider this as my personal "hello world"
+This is WikiNota.
+
+**This exploratory software and not suitable for production usage!**
