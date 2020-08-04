@@ -4,20 +4,20 @@ extern crate crypto;
 extern crate rustc_serialize;
 use self::crypto::digest::Digest;
 use self::crypto::sha3::Sha3;
+use rusqlite::{params, Connection, Result, NO_PARAMS};
 use rustc_serialize::json;
 use std::process;
+use std::{fs, sync::Arc};
 
 use r2d2::Pool;
 use r2d2_sqlite::SqliteConnectionManager;
 
-use rusqlite::{params, Connection, Result, NO_PARAMS};
-use std::{io::Write, sync::Arc};
-
 use actix_web::{
     middleware, web,
     web::{post, Bytes, Query},
-    App, Error, HttpRequest, HttpResponse, HttpServer,
+    App, HttpResponse, HttpServer,
 };
+
 use db_layer::PersistentItem;
 use gerasdb::{db_layer, DbSession};
 
@@ -37,8 +37,10 @@ struct QueryParam {
     id: String,
 }
 
-
-async fn getItem(actix_data: web::Data<AppState>, query_params: web::Query<QueryParam>) -> HttpResponse {
+async fn getItem(
+    actix_data: web::Data<AppState>,
+    query_params: web::Query<QueryParam>,
+) -> HttpResponse {
     // let conn = pool.get().unwrap();
     // let appdata = req.app_data();
 
@@ -55,7 +57,6 @@ async fn getItem(actix_data: web::Data<AppState>, query_params: web::Query<Query
     // Ok(HttpResponse::Ok().into())
     HttpResponse::Ok().body(&html)
 }
-
 
 async fn save_file(actix_data: web::Data<AppState>, bytes: Bytes) -> HttpResponse {
     // let conn = pool.get().unwrap();
@@ -118,50 +119,7 @@ async fn save_file(actix_data: web::Data<AppState>, bytes: Bytes) -> HttpRespons
 }
 
 fn index() -> HttpResponse {
-    let html = r#"<html>
-        <head><title>Upload Test</title></head>
-        <body>
-        <form id="as">
-            <input type="input"   id="content"/>
-            <input type="submit" value="Submit"></button>
-        </form>
-        <div id="bob"></div>
-        <script>
-        async function postData(url = '', data = {}) {
-            // Default options are marked with *
-            const response = await fetch(url, {
-              method: 'POST', // *GET, POST, PUT, DELETE, etc.
-              mode: 'cors', // no-cors, *cors, same-origin
-              cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-              credentials: 'same-origin', // include, *same-origin, omit
-              headers: {
-                'Content-Type': 'application/json'
-                // 'Content-Type': 'application/x-www-form-urlencoded',
-              },
-              redirect: 'follow', // manual, *follow, error
-              referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-              body: JSON.stringify(data) // body data type must match "Content-Type" header
-            });
-            return response.json(); // parses JSON response into native JavaScript objects
-          }
-
-          function postString() {
-            postData('/', document.getElementById("content").value)
-            .then(data => {
-              console.log(data);
-              document.getElementById("bob").innerText = JSON.stringify(data, null,2);
-            });
-          }
-          document.getElementById("as").addEventListener("submit",e => {
-              e.preventDefault();
-              postString();
-          })
-
-        </script>
-        </body>
-    </html>"#;
-
-    HttpResponse::Ok().body(html)
+    HttpResponse::Ok().body(get_index_html())
 }
 
 #[actix_rt::main]
@@ -202,10 +160,24 @@ async fn main() -> std::io::Result<()> {
     .await
 }
 
+fn get_index_html() -> String {
+    let contents = fs::read_to_string("../wikinota_frontend/index.html")
+        .expect("Something went wrong reading the file");
+    return contents;
+}
+
 #[test]
 fn it_works() -> Result<(), gerasdb::dbError> {
     let result = gerasdb::init()?;
     assert_eq!(result.db_name, "HelloDBName");
+
+    Ok(())
+}
+
+#[test]
+fn t_get_index_html() -> Result<()> {
+    let res = get_index_html();
+    assert!(res.contains("<html>"));
 
     Ok(())
 }
