@@ -1,13 +1,13 @@
 [package]
 name = "wikinota_backend"
-version = "0.0.1"
+version = "0.0.2"
 authors = ["i5heu <i5h@i5h.eu>"]
 edition = "2018"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-gerasdb = "0.0.1-dev"
+gerasdb = "0.0.3-dev"
 actix-web = { version = "2.0", features = ["openssl"] }
 actix-rt = "1.1.1"
 rusqlite = "0.23.1"

@@ -35,11 +35,11 @@ fn get_index_html() -> String {
     return contents;
 }
 
-pub async fn getItem(
+pub async fn get_item(
     actix_data: web::Data<AppState>,
     query_params: web::Query<QueryParam>,
 ) -> HttpResponse {
-    let foo = match db_layer::get(&actix_data.pool, &query_params.id.to_string()) {
+    let foo = match db_layer::get_by_hash(&actix_data.pool, &query_params.id.to_string()) {
         Ok(e) => e,
         Err(e) => {
             eprintln!("{}", e);
@@ -56,7 +56,7 @@ pub async fn save_file(actix_data: web::Data<AppState>, bytes: Bytes) -> HttpRes
     let name =
         match String::from_utf8(bytes.to_vec()).map_err(|_| HttpResponse::BadRequest().finish()) {
             Ok(e) => e,
-            Err(e) => {
+            Err(_) => {
                 eprintln!("Errrrrror");
                 process::exit(1);
             }
@@ -93,7 +93,7 @@ pub async fn save_file(actix_data: web::Data<AppState>, bytes: Bytes) -> HttpRes
         }
     };
 
-    let foo = match db_layer::get(&actix_data.pool, &hex.to_string()) {
+    let foo = match db_layer::get_by_hash(&actix_data.pool, &hex.to_string()) {
         Ok(e) => e,
         Err(e) => {
             eprintln!("{}", e);

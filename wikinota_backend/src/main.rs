@@ -9,15 +9,11 @@ use r2d2::Pool;
 use r2d2_sqlite::SqliteConnectionManager;
 use std::process;
 use std::sync::Arc;
-mod reqHandlers;
+mod req_handlers;
 
 pub struct AppState {
     app_name: String,
     pool: Arc<Pool<SqliteConnectionManager>>,
-}
-#[derive(Deserialize)]
-struct FormStruct {
-    content: String,
 }
 
 #[derive(Deserialize)]
@@ -53,7 +49,7 @@ async fn main() -> std::io::Result<()> {
         .unwrap();
     builder.set_certificate_chain_file("cert.pem").unwrap();
 
-    HttpServer::new(|| App::new().route("*", web::get().to(reqHandlers::redirect_to_https)))
+    HttpServer::new(|| App::new().route("*", web::get().to(req_handlers::redirect_to_https)))
         .bind("0.0.0.0:80")?
         .run();
 
@@ -63,10 +59,10 @@ async fn main() -> std::io::Result<()> {
             .wrap(middleware::Logger::default())
             .service(
                 web::resource("/")
-                    .route(web::get().to(reqHandlers::index))
-                    .route(web::post().to(reqHandlers::save_file)),
+                    .route(web::get().to(req_handlers::index))
+                    .route(web::post().to(req_handlers::save_file)),
             )
-            .service(web::resource("/get").route(web::get().to(reqHandlers::getItem)))
+            .service(web::resource("/get").route(web::get().to(req_handlers::get_item)))
     })
     .bind_openssl("0.0.0.0:443", builder)?
     .run()
