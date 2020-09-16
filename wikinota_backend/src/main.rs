@@ -63,6 +63,8 @@ async fn main() -> std::io::Result<()> {
                     .route(web::post().to(req_handlers::save_file)),
             )
             .service(web::resource("/get").route(web::get().to(req_handlers::get_item)))
+            .service(web::resource("/js/*").route(web::get().to(req_handlers::js_files)))
+            .service(web::resource("/css/*").route(web::get().to(req_handlers::css_files)))
     })
     .bind_openssl("0.0.0.0:443", builder)?
     .run()

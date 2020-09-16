@@ -1,47 +1,36 @@
+<!DOCTYPE html>
 <html>
 
 <head>
     <title>Upload Test</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="/css/main.css">
 </head>
 
-<body>
-    <form id="as">
-        <input type="input" id="content" />
-        <input type="submit" value="Submit"></button>
-    </form>
-    <div id="bob"></div>
-    <script>
-        async function postData(url = '', data = {}) {
-            // Default options are marked with *
-            const response = await fetch(url, {
-                method: 'POST', // *GET, POST, PUT, DELETE, etc.
-                mode: 'cors', // no-cors, *cors, same-origin
-                cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-                credentials: 'same-origin', // include, *same-origin, omit
-                headers: {
-                    'Content-Type': 'application/json'
-                    // 'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                redirect: 'follow', // manual, *follow, error
-                referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-                body: JSON.stringify(data) // body data type must match "Content-Type" header
-            });
-            return response.json(); // parses JSON response into native JavaScript objects
-        }
+<body class="x">
+    <div class="mainGrid" id="top" style="grid-area: top">
 
-        function postString() {
-            postData('/', document.getElementById("content").value)
-                .then(data => {
-                    console.log(data);
-                    document.getElementById("bob").innerText = JSON.stringify(data, null, 2);
-                });
-        }
-        document.getElementById("as").addEventListener("submit", e => {
-            e.preventDefault();
-            postString();
-        })
+    </div>
+    <div class="mainGrid" id="right" style="grid-area: right">
 
-    </script>
+    </div>
+    <div class="mainGrid" id="left" style="grid-area: left">
+
+    </div>
+    <div class="mainGrid" id="history" style="grid-area: history">
+        <span style="bottom: 0; position: absolute;">HISTORYHISTORYHISTORYHISTORYHISTORYHISTORY</span>
+    </div>
+    <div class="mainGrid" id="inputNotice" style="grid-area: inputNotice">
+        Blabla<br>
+        blabla
+    </div>
+    <div class="mainGrid" id="bottom" style="grid-area: bottom">
+        <input id="mainInput">
+    </div>
+    <div class="mainGrid" id="lowerBottom" style="grid-area: lowerBottom">
+        bottom
+    </div>
+    <script defer src="/js/start.js"></script>
 </body>
 
 </html>
