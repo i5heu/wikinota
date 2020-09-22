@@ -23,12 +23,13 @@ body {
   height: 100%;
   background: var(--base03);
   color: var(--base2);
+  overflow-y: visible;
 }
 
 body {
   display: grid;
   grid-template-columns: 15% auto 15%;
-  grid-template-rows: 2em auto 8em 2em 2em;
+  grid-template-rows: 2em auto 8em 3em 3em;
   grid-template-areas:
     "top top top"
     "left history right"
@@ -57,4 +58,10 @@ body:not(.inputNoticeActive) #inputNotice {
 #mainInput {
   width: 100%;
   box-sizing: border-box;
+}
+
+#mainInputProgress {
+  height: 3px;
+  border-radius: 0;
+  background: var(--base03);
 }

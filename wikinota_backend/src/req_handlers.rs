@@ -61,6 +61,11 @@ fn get_static_file(filename: &str) -> String {
                 .expect("Something went wrong reading the file")
         }
 
+        "/js/helpers.js" => {
+            contents = fs::read_to_string("../wikinota_frontend/js/helpers.js")
+                .expect("Something went wrong reading the file")
+        }
+
         "/css/main.css" => {
             contents = fs::read_to_string("../wikinota_frontend/css/main.css")
                 .expect("Something went wrong reading the file")
