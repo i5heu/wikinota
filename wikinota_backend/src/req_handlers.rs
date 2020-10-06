@@ -65,11 +65,27 @@ fn get_static_file(filename: &str) -> String {
             contents = fs::read_to_string("../wikinota_frontend/js/helpers.js")
                 .expect("Something went wrong reading the file")
         }
+        
+        "/js/ui_sugar.js" => {
+            contents = fs::read_to_string("../wikinota_frontend/js/ui_sugar.js")
+                .expect("Something went wrong reading the file")
+        }
+
+        "/js/chatInput.js" => {
+            contents = fs::read_to_string("../wikinota_frontend/js/chatInput.js")
+                .expect("Something went wrong reading the file")
+        }
+
+        "/js/masterLogic.js" => {
+            contents = fs::read_to_string("../wikinota_frontend/js/masterLogic.js")
+                .expect("Something went wrong reading the file")
+        }
 
         "/css/main.css" => {
             contents = fs::read_to_string("../wikinota_frontend/css/main.css")
                 .expect("Something went wrong reading the file")
         }
+
 
         _ => contents = String::from("No File Found or Error"),
     }

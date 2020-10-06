@@ -65,3 +65,7 @@ body:not(.inputNoticeActive) #inputNotice {
   border-radius: 0;
   background: var(--base03);
 }
+
+#lowerBottom {
+  font-size: 0.8rem;
+}
