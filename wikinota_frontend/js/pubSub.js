@@ -1,9 +1,8 @@
 class pubSub {
     strore = {
-        demo: [()=>console.log("Test Succes")]
+        demo: [()=>console.log("PubSub > Test Succes")]
     }
     
     constructor() {
-
     }
 }
