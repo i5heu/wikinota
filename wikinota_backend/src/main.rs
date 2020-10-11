@@ -10,6 +10,7 @@ use r2d2_sqlite::SqliteConnectionManager;
 use std::process;
 use std::sync::Arc;
 mod req_handlers;
+mod auth;
 
 pub struct AppState {
     app_name: String,
@@ -62,6 +63,7 @@ async fn main() -> std::io::Result<()> {
                     .route(web::get().to(req_handlers::index))
                     .route(web::post().to(req_handlers::save_file)),
             )
+            .service(web::resource("/api/loginToken").route(web::get().to(auth::get_loginToken)))
             .service(web::resource("/get").route(web::get().to(req_handlers::get_item)))
             .service(web::resource("/js/*").route(web::get().to(req_handlers::js_files)))
             .service(web::resource("/css/*").route(web::get().to(req_handlers::css_files)))

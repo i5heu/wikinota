@@ -7,7 +7,7 @@ class uiSugar {
 		while (true) {
 			const date = new Date();
 
-			var options = { timeZoneName: "short" };
+			var options = { timeZone: "Europe/Berlin", timeZoneName: "short" };
 			document.getElementById("clock-local").innerText = date.toLocaleString(
 				"de-de",
 				options
